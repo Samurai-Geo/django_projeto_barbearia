@@ -12,6 +12,12 @@ class Categoria(models.Model):
     def __str__(self) -> str:
         return f'{self.name}'
 
+class CategoriaUser(Categoria):
+    ...
+
+class CategoriaServico(Categoria):
+    ...
+
 class Barbeiro(models.Model):
     nome = models.CharField(max_length=70)
     sobrenome = models.CharField(max_length=120, blank=True)
@@ -22,8 +28,8 @@ class Barbeiro(models.Model):
     picture = models.ImageField(blank=True, upload_to='picture/%Y/%m', verbose_name='Foto')
     data_criada = models.DateTimeField(default=timezone.now)
     show = models.BooleanField(default=True, verbose_name='mostrar')
-    categoria = models.ForeignKey(
-        Categoria,
+    categoria_user = models.ForeignKey(
+        CategoriaUser,
         on_delete=models.SET_NULL,
         blank=True, null=True,
     )
@@ -39,3 +45,16 @@ class Barbeiro(models.Model):
             return f'{self.nome} {self.sobrenome}'
         return f'{self.apelido} - {self.nome} {self.sobrenome}'
         
+class Servico(models.Model):
+    identificacao = models.CharField(max_length=120)
+    valor = models.FloatField()
+    data_criada = models.DateTimeField(default=timezone.now)
+    show = models.BooleanField(default=True, verbose_name='mostrar')
+    categoria_servico = models.ForeignKey(
+        CategoriaServico,
+        on_delete=models.SET_NULL,
+        blank=True, null=True,
+    )
+
+    def __str__(self) -> str:
+        return self.identificacao
